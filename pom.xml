@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>jdg-2386</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <!--
+           Which Infinispan version do you want to use?  Released versions are always more reliable than snapshots!
+        -->
+        <!--<version.infinispan>9.4.0.Final</version.infinispan>-->
+        <!--       <version.infinispan>9.4.2.DR3-redhat-00001</version.infinispan>-->
+<!--             <version.infinispan>9.4.18.Final-redhat-00001</version.infinispan>-->
+        <!--      <version.infinispan>9.4.16.Final-redhat-00003</version.infinispan>-->
+<!--        <version.infinispan>10.1.5.Final-redhat-00001</version.infinispan>-->
+        <!--       <version.infinispan>11.0.0-SNAPSHOT</version.infinispan>-->
+
+            <version.infinispan>9.4.16.Final-redhat-00002</version.infinispan>
+        <!--          <version.infinispan>9.4.16.Final</version.infinispan>-->
+        <!--      <version.infinispan>9.4.15.Final-redhat-00001</version.infinispan>-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-core</artifactId>
+            <version>${version.infinispan}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-client-hotrod</artifactId>
+            <version>${version.infinispan}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-commons</artifactId>
+            <version>${version.infinispan}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-query</artifactId>
+            <version>${version.infinispan}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-server-hotrod</artifactId>
+            <version>${version.infinispan}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+
+<!--        <dependency>-->
+<!--            <groupId>org.infinispan</groupId>-->
+<!--            <artifactId>infinispan-client-rest</artifactId>-->
+<!--            <version>${version.infinispan}</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>org.infinispan</groupId>-->
+<!--            <artifactId>infinispan-query-dsl</artifactId>-->
+<!--            <version>11.0.0-SNAPSHOT</version>-->
+<!--        </dependency>-->
+
+
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M4</version>
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>infinispan-server-startup</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+<!--                            <skip>${skipTests}</skip>-->
+                            <target>
+                                <ant antfile="/Users/gustavo/jdg-2386/src/test/resources/ant/infinispan-server.xml" target="kill-server">
+                                    <property name="hotrod.port" value="11222" />
+                                </ant>
+                                <ant antfile="/Users/gustavo/jdg-2386/src/test/resources/ant/infinispan-server.xml" target="start-server">
+                                    <!--                                            <property name="server.jvm" value="${jdg.home" />-->
+                                    <property name="server.dist" value="${jdg.home}" />
+                                    <property name="port.offset" value="0" />
+                                    <property name="hotrod.port" value="11222" />
+                                    <property name="infinispan.node.name" value="node1" />
+                                    <property name="infinispan.config.file" value="session-ext.xml" />
+                                </ant>
+                            </target>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>infinispan-server-shutdown</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+<!--                            <skip>${skipTests}</skip>-->
+                            <target>
+                                <ant antfile="/Users/gustavo/jdg-2386/src/test/resources/ant/infinispan-server.xml" target="kill-server">
+                                    <property name="hotrod.port" value="11222" />
+                                </ant>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+
+</project>
