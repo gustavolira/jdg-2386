@@ -19,7 +19,7 @@
 <!--        <version.infinispan>10.1.5.Final-redhat-00001</version.infinispan>-->
         <!--       <version.infinispan>11.0.0-SNAPSHOT</version.infinispan>-->
 
-            <version.infinispan>9.4.16.Final-redhat-00002</version.infinispan>
+            <version.infinispan>11.0.0.Dev05</version.infinispan>
         <!--          <version.infinispan>9.4.16.Final</version.infinispan>-->
         <!--      <version.infinispan>9.4.15.Final-redhat-00001</version.infinispan>-->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
